@@ -29,6 +29,12 @@ def random_bac_tri():
         z = -z;
     return (z)
 
+def sample_Disc2D(size, radius, dimension):
+    direction = np.random.normal(size=(dimension,size))
+    direction /= np.linalg.norm(direction, axis=0)
+    rad = pow(np.random.random(size),(1/dimension))
+    return radius * (rad * direction).T
+
 
 def Eff_IntegratedCorrelationTime (Y):
 #     This calculates Efficiency or Tint using Geyer's (1992) initial positive
