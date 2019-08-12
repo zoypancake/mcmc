@@ -6,36 +6,44 @@ def PDFt4(x, m, s):
     pdf = 3/(4*1.414213562*s)*pow(1 + z*z/2, -2.5)
     return(pdf)
 
-def random_bac():
-    mBactrian = 0.95; sBactrian = np.sqrt(1-mBactrian**2)
-    z = mBactrian + np.random.normal(loc=0.0, scale=1.0, size=1)*sBactrian
-    if np.random.random(1) < 0.5 :
-        z = -z
+def random_bactrian(size):
+    m = 0.95
+    z = m + np.random.normal(size=size) * np.sqrt(1-m**2)
+    judge = np.random.random(size)
+    z[judge<0.5] = -1 * z[judge<0.5]
     return(z)
 
-def rndTriangle():
-    #Standard Triangle variate, generated using inverse CDF
-    u = np.random.random(1);
-    if(u > 0.5):
-        z =  np.sqrt(6.0) - 2.0*np.sqrt(3.0*(1.0 - u));
-    else:
-        z = -np.sqrt(6.0) + 2.0*np.sqrt(3.0*u);
-    return z;
+def random_box(size):
+    a=0.5; b=1.43
+    y = np.random.uniform(low=a,high=b,size=size)
+    judge = np.random.random(size)
+    y[judge<0.5] = -1 * y[judge<0.5]
+    return(y)
+    
+def random_airplane(size):
+    a=1; b=1.47; y =np.zeros(size)
+    mu1 = np.random.random(size); mu2 = np.random.random(size); mu3 = np.random.random(size)
+    y[mu1<(a/(2*b-a))] = a* np.sqrt(mu2[mu1<(a/(2*b-a))])
+    y[mu1>(a/(2*b-a))] = np.random.uniform(low=a, high=b, size=len(y[mu1>(a/(2*b-a))]))
+    y[mu3<0.5] = -y[mu3<0.5]
+    return(y)
+    
+def random_strawhat(size):
+    a=1; b=1.35; y =np.zeros(size)
+    mu1 = np.random.random(size); mu2 = np.random.random(size); mu3 = np.random.random(size)
+    y[mu1<(a/(3*b-2*a))] = a* pow(mu2[mu1<(a/(3*b-2*a))],1/3)
+    y[mu1>(a/(3*b-2*a))] = np.random.uniform(low=a, high=b, size=len(y[mu1>(a/(3*b-2*a))]))
+    y[mu3<0.5] = -y[mu3<0.5]
+    return(y)
 
-def random_bac_tri():
-    mBactrian = 0.95; sBactrian = np.sqrt(1-mBactrian**2)
-    z = mBactrian + rndTriangle()*sBactrian;
-    if(np.random.random(1) < 0.5):
-        z = -z;
-    return (z)
-
-def sample_Disc2D(size, radius, dimension):
-    direction = np.random.normal(size=(dimension,size))
-    direction /= np.linalg.norm(direction, axis=0)
-    rad = pow(np.random.random(size),(1/dimension))
-    return radius * (rad * direction).T
-
-
+def rho_k(Y,lag):
+    n = len(Y); x=Y.copy()
+    x -= np.mean(x)
+    x /= np.std(x)
+    rho = np.sum(np.multiply(x[0:n-lag],x[lag:n]))
+    rho /= n-1
+    return(rho)
+    
 def Eff_IntegratedCorrelationTime (Y):
 #     This calculates Efficiency or Tint using Geyer's (1992) initial positive
 #     sequence method.
