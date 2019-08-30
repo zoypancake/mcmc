@@ -60,6 +60,18 @@ def Eff_IntegratedCorrelationTime (Y):
         rho0 = rho;
     return (1/Tint);
 
+def reflect(x,xL,xU):
+    n=0; side=0; e=0
+    if (x<xL):
+        e = xL-x; side=0 
+    elif(x>xU):
+        e = x-xU; side=1
+    n = int(e/(xU-xL));
+    if(n%2):
+        side = 1-side
+    e -= n*(xU-xL)
+    x = xU-e if side else xL+e
+    return(x)
 
 def norm_pdf(x, loc, scale):
     p = np.exp(-(loc-x)*(loc-x)/(2*scale*scale))/(np.sqrt(2*np.pi)*scale)
