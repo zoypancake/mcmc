@@ -60,6 +60,20 @@ def Eff_IntegratedCorrelationTime (Y):
         rho0 = rho;
     return (1/Tint);
 
+def Eff_quantile (Y,p):
+    rho0=0; n = len(Y); 
+#     quantile = scipy.stats.norm.ppf(percent,loc=mu,scale=std)
+    quantile = np.quantile(Y,p)
+    x = np.where(Y<=quantile,1,0);Tint=np.var(x);
+    for irho in range(1,(n-10)):
+        rho = np.cov(x[0:n-irho], x[irho:n])[0,1]
+        if ((irho>10) & (rho+rho0<0)):
+            break;
+        Tint += rho*2;
+        rho0 = rho;
+#         print('lag:',irho,'|',rho,'sum',':')
+    return (p*(1-p)/Tint);
+
 def reflect(x,xL,xU):
     n=0; side=0; e=0
     if (x<xL):
