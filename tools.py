@@ -74,6 +74,17 @@ def Eff_quantile (Y,p):
 #         print('lag:',irho,'|',rho,'sum',':')
     return (p*(1-p)/Tint);
 
+def Eff_quantile_BM (Y,p):
+    n = len(Y); length = np.floor(np.sqrt(n)); remainder = n % length;
+    y_short = Y[:int(n-remainder)].copy(); batch = len(y_short)/length
+    quantile = np.quantile(Y,p)
+    x = np.where(y_short<=quantile,1,0)
+    split = np.split(x,batch)
+    y = np.mean(split,axis=1)
+    mu_hat = np.mean(y)
+    var = batch*np.sum(np.square(y-mu_hat))/(length-1)
+    return (p*(1-p)/var);
+
 def reflect(x,xL,xU):
     n=0; side=0; e=0
     if (x<xL):
