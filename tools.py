@@ -60,6 +60,15 @@ def Eff_IntegratedCorrelationTime (Y):
         rho0 = rho;
     return (1/Tint);
 
+def Eff_Mean_BM (Y):
+    n = len(Y); length = np.floor(np.sqrt(n)); remainder = n % length;
+    x = Y[:int(n-remainder)].copy(); batch = len(x)/length
+    split = np.split(x,batch)
+    y = np.mean(split,axis=1)
+    mu_hat = np.mean(y)
+    var = batch*np.sum(np.square(y-mu_hat))/(length-1)
+    return (1/var);
+
 def Eff_quantile (Y,p):
     rho0=0; n = len(Y); 
 #     quantile = scipy.stats.norm.ppf(percent,loc=mu,scale=std)
