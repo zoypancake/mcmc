@@ -1,5 +1,16 @@
 import numpy as np
-from scipy.stats import norm
+import matplotlib.pyplot as plt
+import numpy as np
+import scipy.stats
+from scipy.stats import multivariate_normal
+import pandas as pd
+from scipy.linalg import fractional_matrix_power
+from scipy.stats import wishart
+import sys
+import time
+import random
+import math
+from IPython.core.display import display, HTML
 
 def PDFt4(x, m, s):
     z = (x-m)/s
