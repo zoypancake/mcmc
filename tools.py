@@ -105,6 +105,18 @@ def Eff_quantile_BM (Y,p):
     var = batch*np.sum(np.square(y-mu_hat))/(length-1)
     return (p*(1-p)/var);
 
+def updateCov(Cov, incoming, n_old, mean_old):
+    n_new = incoming.shape[0]
+    mean_incoming = np.mean(incoming,0).reshape(d,1)
+    f = 1/(n_old+n_new-1); fm = 1/(n_old+n_new)
+
+    mean_new = ((1-n_new*fm) * mean_old + (n_new*fm) * mean_incoming).reshape(d,1)
+    mean_diff = mean_new - mean_old
+    a1 = 1-n_new*f; a2 = 1-(n_new-1)*f
+    incoming_scale = incoming-mean_new.reshape(d,)
+
+    return(a1*Cov + a2*mean_diff.dot(mean_diff.T) + f*incoming_scale.T.dot(incoming_scale))
+
 def reflect(x,xL,xU):
     n=0; side=0; e=0
     if (x<xL):
